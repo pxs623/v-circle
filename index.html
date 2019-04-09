@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>vue-pay-keyboard</title>
+  <style>
+    /* button { */
+      /* border: 1px solid #ccc; */
+      /* height: 30px; */
+      /* width: 100px; */
+    /* } */
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <v-circle color="#6DE19F" border-color="#6DE19F" text-color="#6DE19F" width=80 font-size=12 :pv='pv' desc="响应延迟" bold=6 text-bg-color='#ffffff'></v-circle>
+  </div>
+ <script src="./node_modules/vue/dist/vue.js"></script> 
+ <script src="/dist/v-circle.js"></script>   
+</body>
+<script>
+  new Vue({
+    el: '#app',
+    data:{
+      pv:14
+    },
+    mounted(){
+      var that=this;
+      setTimeout(function(){
+        that.pv=28
+      }, 2000);
+    },
+    methods: {
+     
+    }
+  })
+</script>
+<style>
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+</style>
+</html>

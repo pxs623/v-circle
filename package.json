@@ -1,45 +1,30 @@
 {
   "name": "v-circle",
-  "version": "0.1.3",
-  "description": "A collection of circle progress with Vue.js.",
-  "main": "index.js",
-  "scripts": {
-    "dev": "webpack-dev-server --inline --hot --host=0.0.0.0",
-    "build": "webpack -p"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/qddegtya/v-circle.git"
-  },
-  "keywords": [
-    "vue",
-    "web",
-    "component",
-    "circle",
-    "progress"
-  ],
-  "author": "archer",
+  "description": "A Vue component to circle",
+  "author": "pxs_623@163.com",
+  "private": false,
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/qddegtya/v-circle/issues"
+  "main": "dist/v-circle.js",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
+    "pub": "npm run build && npm publish"
   },
-  "homepage": "https://github.com/qddegtya/v-circle#readme",
   "dependencies": {
-    "vue": "^1.0.21"
+    "vue": "^2.3.3"
   },
   "devDependencies": {
-    "babel-core": "^6.7.7",
-    "babel-loader": "^6.2.4",
-    "babel-plugin-transform-runtime": "^6.7.5",
-    "babel-preset-es2015": "^6.6.0",
-    "babel-runtime": "^5.8.38",
-    "node-sass": "^3.6.0",
-    "sass-loader": "^3.2.0",
-    "vue-hot-reload-api": "^1.3.2",
-    "vue-html-loader": "^1.2.2",
-    "vue-loader": "^8.2.3",
-    "vue-style-loader": "^1.0.0",
-    "webpack": "^1.13.0",
-    "webpack-dev-server": "^1.14.1"
+    "babel-core": "^6.0.0",
+    "babel-loader": "^6.0.0",
+    "babel-preset-env": "^1.5.1",
+    "cross-env": "^3.0.0",
+    "css-loader": "^0.25.0",
+    "file-loader": "^0.9.0",
+    "node-sass": "^4.5.0",
+    "sass-loader": "^5.0.1",
+    "vue-loader": "^12.1.0",
+    "vue-template-compiler": "^2.3.3",
+    "webpack": "^2.6.1",
+    "webpack-dev-server": "^2.4.5"
   }
 }

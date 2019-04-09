@@ -1,15 +1,17 @@
 <template>
-<div class="v-circle" v-bind:style="circleStyle" v-on:click="setPv">
-  <div class="mask full" v-bind:style="[maskStyle, transitionStyle, rotateStyle]">
-    <div class="fill" v-bind:style="[fillStyle, transitionStyle, rotateStyle]"></div>
+<div class="v-circle" :style="circleStyle" >
+  <div class="mask full" :style="[maskStyle, transitionStyle, rotateStyle]">
+    <div class="fill" :style="[fillStyle, transitionStyle, rotateStyle]"></div>
   </div>
-  <div class="mask half" v-bind:style="[maskStyle]">
-    <div class="fill" v-bind:style="[fillStyle, transitionStyle, rotateStyle]"></div>
-    <div class="fill fix" v-bind:style="[fillStyle, fixStyle, transitionStyle]"></div>
+  <div class="mask half" :style="[maskStyle]">
+    <div class="fill" :style="[fillStyle, transitionStyle, rotateStyle]"></div>
+    <div class="fill fix" :style="[fillStyle, fixStyle, transitionStyle]"></div>
   </div>
-  <div class="pv" v-bind:style="pvStyle">
-    <span class="progress" v-bind:style="progressTextStyle">
-      {{ pv || 0 }}
+  <div class="pv" :style="pvStyle">
+    <span class="progress" :style="progressTextStyle">
+      <span class="percent">{{ pv?pv:'' }}{{unit}}</span>
+      <br>
+      {{desc}}
     </span>
   </div>
 </div>
@@ -19,7 +21,7 @@
   .v-circle {
     border-radius: 50%;
     position: relative;
-
+    box-sizing: content-box;
     .mask, .fill {
       position: absolute;
       border-radius: 50%;
@@ -36,11 +38,18 @@
       z-index: 1;
       border-radius: 50%;
       text-align: center;
-
+      display: flex;
+      align-items: center;
       .progress {
         margin: 0;
         padding: 0;
         font-family: 'Impact';
+        font-size:14px;
+        line-height:1.5;
+        width:100%;
+        .percent{
+          font-size:1.6em;
+        }
       }
     }
 
@@ -58,6 +67,7 @@ const DEFAULT_WIDTH = 150
     , DEFAUTL_TEXT_BG_COLOR = '#333333'
 
 export default {
+  name: 'v-circle',
   methods: {
     setClip(t, r, b, l) {
       return `rect(${t}px, ${r}px, ${b}px, ${l}px)`
@@ -74,9 +84,7 @@ export default {
       return `transform ${t}s`
     },
     setPv() {
-      this.pv = ~~(Math.random(0, 100) * 100)
       let types = ['fix', 'rotate']
-
       // map styles
       types.map((type) => {
         this[type + 'Style'] = {
@@ -96,79 +104,98 @@ export default {
     'textBgColor',
     'borderColor',
     'during',
-    'bgColor'
+    'bgColor',
+    'desc',
+    'unit'
   ],
-
-  data() {
-    let transformStyleValue = this.setTransformStyle(this.pv)
-      , innerCircleWidth = ((this.width || DEFAULT_WIDTH)
-                           - 2 * (this.bold || DEFAULT_BOLD))
-                           + 'px'
-
-      , fixTransformStyleValue = this.setTransformStyle(this.pv, 'fix')
-      , transitionStyleValue = this.setTransitionStyle(this.during || 0.8)
-
-    return {
+  computed:{
+    transformStyleValue(){
+      return this.setTransformStyle(this.pv)
+    },
+    innerCircleWidth(){
+      return ((this.width || DEFAULT_WIDTH) - 2 * (this.bold || DEFAULT_BOLD)) + 'px'
+    },
+    fixTransformStyleValue(){
+      return this.setTransformStyle(this.pv, 'fix')
+    },
+       transitionStyleValue(){
+      return this.setTransitionStyle(this.during || 0.8)
+    },
       // 环形样式
-      circleStyle: {
+      circleStyle() {
+        return {
         borderColor: (this.borderColor || DEFAULT_BORDER_COLOR),
         borderStyle: 'solid',
-        borderWidth: DEFAULT_BOLD + 'px',
+        borderWidth: this.bold/3 + 'px',
         width: (this.width || DEFAULT_WIDTH) + 'px',
         height: (this.width || DEFAULT_WIDTH) + 'px',
         backgroundColor: (this.bgColor || DEFAUTL_BG_COLOR)
+        }
       },
 
       // 进度文字样式
-      progressTextStyle: {
+      progressTextStyle() {
+        return {
         fontSize: (this.fontSize || DEFAULT_FONT_SIZE) + 'px',
         color: this.textColor || DEFAULT_TEXT_COLOR
+        }
       },
 
-      fillStyle: {
+      fillStyle() {
+        return {
         backgroundColor: this.color || DEFAULT_FILL_COLOR,
         width: (this.width || DEFAULT_WIDTH) + 'px',
         height: (this.width || DEFAULT_WIDTH) + 'px',
         clip: this.setClip(0, this.width / 2, this.width, 0)
+        }
       },
 
-      rotateStyle: {
-        transform: transformStyleValue,
-        webkitTransform: transformStyleValue,
-        msTransform: transformStyleValue,
-        oTransform: transformStyleValue,
-        mozTransform: transformStyleValue
+      rotateStyle() {
+        return {
+        transform: this.transformStyleValue,
+        webkitTransform: this.transformStyleValue,
+        msTransform: this.transformStyleValue,
+        oTransform: this.transformStyleValue,
+        mozTransform: this.transformStyleValue
+        }
       },
 
-      transitionStyle: {
-        transition: transitionStyleValue,
-        webkitTransition: transitionStyleValue,
-        mozTransition: transitionStyleValue,
-        oTransition: transitionStyleValue,
-        msTransition: transitionStyleValue
+      transitionStyle() {
+        return {
+        transition: this.transitionStyleValue,
+        webkitTransition: this.transitionStyleValue,
+        mozTransition: this.transitionStyleValue,
+        oTransition: this.transitionStyleValue,
+        msTransition: this.transitionStyleValue
+        }
       },
 
-      maskStyle: {
+      maskStyle() {
+        return {
         width: (this.width || DEFAULT_WIDTH) + 'px',
         height: (this.width || DEFAULT_WIDTH) + 'px',
         clip: this.setClip(0, this.width, this.width, this.width / 2)
+        }
       },
 
-      pvStyle: {
+      pvStyle() {
+        return {
         backgroundColor: this.textBgColor || DEFAUTL_TEXT_BG_COLOR,
-        width: innerCircleWidth,
-        height: innerCircleWidth,
-        lineHeight: innerCircleWidth
+        width: this.innerCircleWidth,
+        height: this.innerCircleWidth,
+        lineHeight: this.innerCircleWidth
+        }
       },
 
-      fixStyle: {
-        transform: fixTransformStyleValue,
-        webkitTransform: fixTransformStyleValue,
-        mozTransform: fixTransformStyleValue,
-        oTransform: fixTransformStyleValue,
-        msTransform: fixTransformStyleValue
+      fixStyle() {
+        return {
+        transform: this.fixTransformStyleValue,
+        webkitTransform: this.fixTransformStyleValue,
+        mozTransform: this.fixTransformStyleValue,
+        oTransform: this.fixTransformStyleValue,
+        msTransform: this.fixTransformStyleValue
+        }
       }
-    }
   }
 }
 </script>

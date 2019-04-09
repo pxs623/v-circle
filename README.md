@@ -1,94 +1,86 @@
-v-circle
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
-======
+# vue-pay-keyboard
 
-A collection of circle progress with Vue.js.
+A Vue component to pay-keyboard
+一个虚拟数字支付键盘插件
 
-* Vue 1.0+ use `v-circle 0.1+`
-* Vue 2.0+ use `v-circle 0.2+`
+[vue插件开发与发布](https://www.jianshu.com/p/d6855556cd75)
 
-## Demos & Examples
+## demo演示
 
-Live Demo: [xiaoa.name/v-circle](http://xiaoa.name/v-circle/)
+[demo](http://mall.yucccc.com/vuepayboard/)
 
-To build the examples locally, run:
+## 安装
 
-```
-npm install
-npm run dev
+```JS
+npm install vue-pay-keyboard -S
 ```
 
-Then open [http://localhost:8080/examples/home.html](http://localhost:8080/examples/home.html) in a browser.
+## 使用
 
-## Installation
+```js
+// ES6
+import vuePayKeyboard from 'vue-pay-keyboard.js'
+// require
+var vuePayKeyboard = require('PayKeyboard')
 
-The easiest way to use `v-circle` is to install it from NPM and include it in your own Vue build process (using [Webpack](http://webpack.github.io/), etc)
+Vue.use(vuePayKeyboard)
 
+// 或者直接使用script导入
+<script src="./node_modules/vue/dist/vue-pay-keyboard.js"></script>
+
+// 作为组件的方式使用
+<vue-pay-keyboard></vue-pay-keyboard>
 ```
-$ npm install v-circle
+
+### 配置
+
+```html
+   <vue-pay-keyboard
+   ref="pay"
+   :is-pay='isPay'
+   @pas-end='pasEnd'
+   @close='isPay=false'>
+    <!-- 自定义支付动画 -->
+      <div slot="loading-ani">
+        <svg></svg>
+      </div>
+    </vue-pay-keyboard>
 ```
 
-## Build
-
-build to dist
-
-```
-$ npm run build
-```
-
-You can also use the standalone build by including `dist/v-circle.js` in your page. If you use this, make sure you have already included Vue, and it is available as a global variable.
-
-## Usage
-
-.vue file usage
-
-```
-<template>
-<circle-css color="#3498db" width=120 font-size=48 pv=12 bold=8 text-bg-color='#f0f0f0'></circle-css>
-</template>
-
-<script>
-import CssCircle from 'v-circle/components/css-circle.vue'
-
-export default {
-  components: {
-    circleCss: CssCircle
-  }
+```javascript
+methods:{
+    pasEnd(val) {
+      console.log(val);  //得到密码 可能会进行一些加密动作
+      setTimeout(() => { // 模拟请求接口验证密码中 ..
+        if (val === '111111') { // 密码正确
+          this.$refs.pay.$payStatus(true) // 拿到子组件的事件
+        } else {
+          this.$refs.pay.$payStatus(false)
+        }
+      }, 1000)
+    }
 }
-</script>
 ```
 
-## Circles
+### Props
 
-* CssCircles
-* SvgCircles
-* CanvasCircles
+|    name    |    Description   |   type   |default|
+| -----------------  | ---------------- | :--------: | :----------: |
+| highlight-color       | 点击时高亮颜色 |String| #000
+| pas-digits        | 密码位数 |Number | 6
+| is-pay        | 显示键盘 |Boolean | false
+| pay-title        | 支付标题 |String | 请输入支付密码
 
-## API
+### Slots 支持自定义插槽
 
-### CssCircles
+|    name    |    Description   |   type   |default|
+| -----------------  | ---------------- | :--------: | :----------: |
+| loading-ani       | 支付请求中 || loading
+| pay-status        | 支付成功或者失败|| 支付成功
 
-| prop | type | description | example | default value |
-|:------------- |:--------------- |:------------- |:-------- |:-------- |
-| color | String | circle progress fill color | #000000 | #2ecc71 |
-| width | Number | circle size | 180 | 150 |
-| fontSize | Number | circle progress value size | 64 | 64 |
-| pv | Number | circle progress value | 75 | 0 |
-| textColor | String | circle progress value color | #bdc3c7 | #bdc3c7 |
-| bold | String | circle progress outline width | 10 | 5 |
-| textBgColor | String | circle progress value background-color | #000000 | #f9f9f9 |
-| borderColor | String | circle progress outline color | #000000 | #bdc3c7 |
-| during | Number | circle progress animation dur-time | 2 | 0.8 |
-| bgColor | String | circle progress background-color | #000000 | #f0f0f0 |
+### Events
 
-## Contributors
-
-Thanks goes to these wonderful people ([emoji key](https://github.com/all-contributors/all-contributors#emoji-key)):
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore -->
-| [<img src="https://avatars2.githubusercontent.com/u/773248?v=4" width="100px;" alt="Archer (炽宇)"/><br /><sub><b>Archer (炽宇)</b></sub>](http://xiaoa.name)<br />[💻](https://github.com/qddegtya/v-circle/commits?author=qddegtya "Code") [🚇](#infra-qddegtya "Infrastructure (Hosting, Build-Tools, etc)") [🚧](#maintenance-qddegtya "Maintenance") |
-| :---: |
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+| name | Description   |
+| :--------:   | -----  |
+|    pas-end    |  密码输入完毕后触发事件,接收所输密码
+|    close    |  关闭键盘
